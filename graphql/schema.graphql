@@ -47,5 +47,5 @@ type Post {
 }
 
 type Mutation {
-    createUser(email: String)
+    createPost(title: String!, user_id: Int!): Post! @create
 }
