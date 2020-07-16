@@ -8,8 +8,20 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 scalar DateTimeTz @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTimeTz")
 
 type Query {
-    users: [User!]! @paginate(defaultCount: 10)
+    users: [User!]! @all
+    usersByPaginate: [User!]! @paginate(defaultCount: 10, maxCount: 8)
     user(id: ID @eq): User @find
+    hello: String!
+    posts: [Post!]! @all
+    post(id: Int! @eq): Post @find
+    taxonomies: [Taxonomy!]! @all
+    taxxonomy(id: Int @eq): Taxonomy @find
+}
+
+type Mutation {
+    createUser(name: String!, email: String!, password: String!): User
+    updateUser(id: ID, email: String, password: String): User
+    deleteUser(id: ID): User
 }
 
 type User {
@@ -18,4 +30,22 @@ type User {
     email: String!
     created_at: DateTime!
     updated_at: DateTime!
+    posts: [Post!]! @hasMany
+}
+
+type Taxonomy {
+    id: ID!
+    title: String!
+    description: String
+}
+
+type Post {
+    id: ID!
+    title: String!
+    author: User @belongsTo(relation: "user")
+    taxonomies: [Taxonomy!]! @hasMany
+}
+
+type Mutation {
+    createUser(email: String)
 }
